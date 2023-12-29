@@ -1,14 +1,10 @@
 const express = require('express');
- require('dotenv').config();
- 
+require('dotenv').config();
 
-
-const app = express();
-
+const app = express()
 
 app.get('/', (req, res) => {
-    res.send('Hello World!');
-});
+  res.send('Hello World!')
+})
 
-module.exports = app;
-
+module.exports = app
