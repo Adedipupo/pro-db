@@ -1,4 +1,7 @@
 const User = require("../model/user");
+const bcrypt = require("bcryptjs");
+
+
 
 const registerUser = async (req, res) => {
     const {firstname , lastname, email, password } = req.body;
@@ -13,5 +16,9 @@ const registerUser = async (req, res) => {
         res.status(200).send({message: "User already exists"});
     }
 
-    
+
 };
+
+module.exports = {
+    registerUser
+}
