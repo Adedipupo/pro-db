@@ -1,6 +1,6 @@
-const User = require('../model/user')
-const bcrypt = require('bcryptjs')
-const { generateToken } = require('../utils/generateToken')
+const User = require('../model/user');
+const { generateToken } = require('../utils/generateToken');
+
 
 const registerUser = async (req, res) => {
   try {
@@ -23,7 +23,7 @@ const registerUser = async (req, res) => {
       password,
     })
 
-    await newUser.save()
+    await user.save()
 
     const token = await generateToken(user._id)
 
@@ -33,7 +33,7 @@ const registerUser = async (req, res) => {
     res.cookie('token', token)
     return res.status(201).json({
       message: 'User successfully created!!!',
-      data: newUser,
+      data: user,
       token: token,
     })
   } catch (error) {
@@ -43,6 +43,44 @@ const registerUser = async (req, res) => {
       success: false,
     })
   }
+}
+
+const loginUser = async(req, res) => { 
+
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+        return res.status(401).json({
+          message: `User with this email does not exist`,
+        })
+      }
+
+      const userPassword = await user.matchPassword(password)
+
+    //   res.cookie('authorization', token, {
+    //     path: '/',
+    //     httpOnly: true,
+    //     expires: new Date(Date.now() + 1000 * 86400),
+        // sameSite: "none",
+        // secure: true,
+    //   })
+
+      if (user && userPassword) {
+        res.status(200).json({
+          _id: user._id,
+          firstname: user.firstname,
+          lasttname: user.lastname,
+          email: user.email,
+          token: generateToken(user._id),
+        });
+      } else {
+        res.status(401);
+        throw new Error("Invalid username or password");
+      }
+
+
 }
 
 module.exports = {
