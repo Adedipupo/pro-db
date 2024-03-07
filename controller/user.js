@@ -47,7 +47,8 @@ const registerUser = async (req, res) => {
 
 const loginUser = async(req, res) => { 
 
-    const { email, password } = req.body;
+    try {
+      const { email, password } = req.body;
 
     const user = await User.findOne({ email });
 
@@ -57,32 +58,53 @@ const loginUser = async(req, res) => {
         })
       }
 
-      const userPassword = await user.matchPassword(password)
+      const userPassword = await user.matchPassword(password);
 
-    //   res.cookie('authorization', token, {
-    //     path: '/',
-    //     httpOnly: true,
-    //     expires: new Date(Date.now() + 1000 * 86400),
+      const token = await generateToken(user._id)
+
+
+      res.cookie('authorization', token, {
+        path: '/',
+        httpOnly: true,
+        expires: new Date(Date.now() + 1000 * 86400),
         // sameSite: "none",
         // secure: true,
-    //   })
+      })
+
+      if(!user || !userPassword){
+        return res.status(401).json({
+          message: "Invalid username or password"
+        });
+      }
 
       if (user && userPassword) {
         res.status(200).json({
           _id: user._id,
           firstname: user.firstname,
-          lasttname: user.lastname,
+          lastname: user.lastname,
           email: user.email,
           token: generateToken(user._id),
         });
-      } else {
-        res.status(401);
-        throw new Error("Invalid username or password");
       }
+    } catch (error) {
+      console.log(error)
+      return res.status(500).json({
+        message: 'Internal Server Error',
+        success: false,
+      })
+    }
+
+
+}
+const dashboard = async(req, res) => { 
+
+    return res.send('dashboard is live');
 
 
 }
 
 module.exports = {
   registerUser,
+  loginUser,
+  dashboard
 }
