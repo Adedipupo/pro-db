@@ -9,7 +9,7 @@ const authToken = async(req, res, next) => {
     req.headers.authorization.startsWith("Bearer "))
   ) {
      try {
-       token = req.headers.authorization.split(" ")[1] || req.cookies.token;
+       token = req.headers.authorization.split(" ")[1] || req.cookies.authorization;
       const {id} = verifyToken(token);
       req.user = await User.findById(id).select("-password");
       next();
