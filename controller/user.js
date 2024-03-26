@@ -1,5 +1,5 @@
 const User = require('../model/user');
-const { generateToken } = require('../utils/generateToken');
+const { generateToken } = require('../utils/authToken');
 
 
 const registerUser = async (req, res) => {
@@ -46,7 +46,6 @@ const registerUser = async (req, res) => {
 }
 
 const loginUser = async(req, res) => { 
-
     try {
       const { email, password } = req.body;
 

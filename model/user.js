@@ -6,11 +6,11 @@ const bcrypt = require('bcryptjs');
 const { Schema } = mongoose
 
 const userSchema = new Schema({
-  firstname: {
-    type: String,
-    default: null,
-  },
-  lastname: {
+  // firstname: {
+  //   type: String,
+  //   default: null,
+  // },
+  username: {
     type: String,
     default: null,
   },
@@ -18,13 +18,22 @@ const userSchema = new Schema({
     type: String,
     unqiue: true,
   },
+  photo:{
+    type: String,
+  },
+  role:{
+    type: String,
+    default: "regular",
+  },
   password: {
     type: String,
   },
   token: {
     type: String,
   },
-})
+},
+  { timestamps: true }
+)
 
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password)

@@ -1,4 +1,4 @@
-const {verifyToken} = require("../utils/generateToken")
+const {verifyToken} = require("../utils/authToken")
 const User = require('../model/user');
 
 const authToken = async(req, res, next) => {   
